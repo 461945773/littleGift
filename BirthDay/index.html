@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body {
+            text-align: center;
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+    <link rel="stylesheet" href="default.css"/>
+</head>
+<body>
+<img id="img1" src="" alt=""/>
+<img id="img2" src="" alt=""/>
+<img id="img3" src="" alt=""/>
+<img id="img4" src="" alt=""/>
+<img id="img5" src="" alt=""/>
+<audio id="dj" src="sounds/song.mp3" loop="loop"></audio>
+<audio id="audio" src="sounds/miaowu.mp3"></audio>
+<img id="canvas"/>
+<video preload="metadata" controls="controls">
+    <source src="video/rabbit_VP8_001.webm" type="video/webm"/>
+</video>
+<script>
+    var canvas = document.getElementById("canvas");
+    canvas.width = 540;
+    canvas.height = 260;
+    canvas.style.left = (window.innerWidth - canvas.width) / 2 + "px";
+    debug = true;
+    switchy = true;
+    canvas.style.display = "none";
+    alive = 0.1;
+    function print(str) {
+        if (debug) {
+            console.log(str);
+        }
+    }
+    var lastTime = Date.now();
+</script>
+<script src="main.js"></script>
+<script src="load.js"></script>
+<script>
+    var i_count = 0 + 299;
+    function countTime() {
+        if (i_count++ % 60 == 0) {
+            console.log(">>>>>>>>Tick_" + Math.floor(i_count / 60) + ">>>>>>>>")
+        }
+    }
+    function rander() {
+        debug_func();
+        if (i_count == 60) {
+            changeImg(1, "");
+            setImg(2, 0, -200);
+            changeImg(2, "4.gif");
+        } else if (i_count == 120) {
+            changeImg(2, "");
+            setImg(3, 200, 0);
+            changeImg(3, "3.gif");
+        } else if (i_count == 180) {
+            changeImg(3, "");
+            setImg(4, 0, 200);
+            changeImg(4, "2.gif");
+        } else if (i_count == 240) {
+            changeImg(4, "");
+            setImg(5, -200, 0);
+            changeImg(5, "1.gif");
+        } else if (i_count == 300) {
+            changeImg(5, "");
+            var img = document.getElementsByTagName("img");
+            for (var i = 0; i < img.length; i++) {
+                img[i].style.display = "none";
+            }
+            {
+                canvas.style.display = "block";
+                canvas.onmouseover = function () {
+                    drawImg("Cat_wolf.gif");
+                    setTimeout(function () {
+                        var x = document.getElementById("audio");
+                        x.volume = 0.5;
+                        x.play();
+                    }, 1000);
+                }
+                canvas.onmouseout = function () {
+                    drawImg("Cat_index.jpg");
+                    document.getElementById("audio").pause();
+                    document.getElementById("audio").currentTime = 0.0;
+                }
+                drawImg("Cat_index.jpg");
+            }
+        }
+    }
+    function debug_func() {
+        if (debug) {
+            countTime();
+        }
+    }
+    function setImg(i, offsetL, offsetT) {
+        var img = document.getElementById("img" + i);
+        img.style.left = (window.innerWidth - 218) / 2 + offsetL + "px";
+        print(img.style.left);
+        img.style.top = (window.innerHeight - 194) / 2 + offsetT + "px";
+        print(img.style.top);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+#canvas {
+    position: absolute;
+    z-index: 2;
+    border-radius: 25px;
+    box-shadow: 5px 5px 5px lightgray;
+}
+
+#canvas:hover {
+    border: solid 3px salmon;
+    -webkit-transform: rotateX(15deg);
+    -moz-transform: rotateX(15deg);
+    -ms-transform: rotateX(15deg);
+    -o-transform: rotateX(15deg);
+    transform: rotateX(15deg);
+}
+
+img {
+    z-index: 9999;
+    position: absolute;
+}
+
+video {
+    display: none;
+    position: absolute;
+    top: 100px;
+}
