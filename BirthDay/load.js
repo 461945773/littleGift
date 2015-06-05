@@ -73,7 +73,10 @@ resources.load([
     '3.gif',
     '4.gif',
     '5.gif',
-    'Cat_wolf.gif'
+    'Cat_wolf.gif',
+    'heart.png',
+    'love_reason.png',
+    'onlyyou.png'
 ]);
 
 resources.onReady(init);

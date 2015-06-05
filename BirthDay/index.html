@@ -12,33 +12,61 @@
     </style>
     <link rel="stylesheet" href="default.css"/>
 </head>
+
 <body>
+<div id="mask">
+
+</div>
+<div id="show">
+    <img id="showImg" src="" alt=""/>
+
+    <div id="sentence"></div>
+</div>
 <img id="img1" src="" alt=""/>
 <img id="img2" src="" alt=""/>
 <img id="img3" src="" alt=""/>
 <img id="img4" src="" alt=""/>
 <img id="img5" src="" alt=""/>
-<audio id="dj" src="sounds/song.mp3" loop="loop"></audio>
+<audio id="dj" loop="loop">
+    <source src="sounds/song.mp3" type="audio/mpeg">
+</audio>
+<audio id="main" loop="loop">
+    <source src="sounds/main.mp3" type="audio/mpeg">
+</audio>
 <audio id="audio" src="sounds/miaowu.mp3"></audio>
-<img id="canvas"/>
-<video preload="metadata" controls="controls">
+<img id="canvas" onclick="stage2()"/>
+
+<div id="content"></div>
+<video id="rabbit" preload="metadata" controls="controls">
     <source src="video/rabbit_VP8_001.webm" type="video/webm"/>
 </video>
 <script>
+
     var canvas = document.getElementById("canvas");
     canvas.width = 540;
     canvas.height = 260;
     canvas.style.left = (window.innerWidth - canvas.width) / 2 + "px";
-    debug = true;
+    debug = false;
     switchy = true;
     canvas.style.display = "none";
-    alive = 0.1;
+    var sec = 1;
     function print(str) {
         if (debug) {
             console.log(str);
         }
     }
     var lastTime = Date.now();
+
+    strs = ["20岁的兔兔~！又漂亮了一年~！",
+        "扑上来抱住我的宝贝兔~！！！",
+        "这是兔兔的！！！20岁生日君~！！！",
+        "年年有今日~岁岁有今朝~！！！",
+        "爸比要！带着一只爸比！来找兔兔了！！！",
+        "我们家的小喵喵~！！！准备好了咩~！！！",
+        "兔兔~！！！起飞吧~~~！！！",
+        "（移动到最上面的喵喵那里吧！）",
+        "召唤！喵喵之灵！！！"];
+
 </script>
 <script src="main.js"></script>
 <script src="load.js"></script>
@@ -46,11 +74,14 @@
     var i_count = 0 + 299;
     function countTime() {
         if (i_count++ % 60 == 0) {
-            console.log(">>>>>>>>Tick_" + Math.floor(i_count / 60) + ">>>>>>>>")
+            if (debug) {
+                console.log(">>>>>>>>Tick_" + Math.floor(i_count / 60) + ">>>>>>>>")
+            }
         }
     }
     function rander() {
         debug_func();
+        content.innerHTML = all_str;
         if (i_count == 60) {
             changeImg(1, "");
             setImg(2, 0, -200);
@@ -75,26 +106,72 @@
             }
             {
                 canvas.style.display = "block";
-                canvas.onmouseover = function () {
-                    drawImg("Cat_wolf.gif");
-                    setTimeout(function () {
-                        var x = document.getElementById("audio");
-                        x.volume = 0.5;
-                        x.play();
-                    }, 1000);
-                }
-                canvas.onmouseout = function () {
-                    drawImg("Cat_index.jpg");
-                    document.getElementById("audio").pause();
-                    document.getElementById("audio").currentTime = 0.0;
-                }
                 drawImg("Cat_index.jpg");
+            }
+        } else {
+            if (i_count == 420) {
+                showWord("小喵喵生日快乐~~~！！！", "h2");
+            }
+            if (i_count > 480) {
+                var n = strs.length;
+                if ((i_count - (420 + sec * 60)) % (sec * 60) == 0) {
+                    i = (i_count - (420 + sec * 60)) / (sec * 60);
+                    if (i < n) {
+                        console.log(i, "->", strs[i])
+                        showWord(strs[i]);
+                    } else {
+                        cat_Ready();
+                    }
+                }
+                if ((i_count - (420 + sec * 60)) / (sec * 60) - 1 < strs.length) {
+                    window.scrollTo(99999, 99999);
+                }
             }
         }
     }
     function debug_func() {
-        if (debug) {
-            countTime();
+        countTime();
+    }
+    var all_str = "";
+    var content = document.getElementById("content");
+    function showWord(str, t) {
+        type = t || "h2";
+        second = sec;
+        temp = second * 60 / str.length;
+        all_str += "<" + type + ">";
+        count = 0;
+        var i = -1;
+        requestAnimationFrame(function () {
+            count++;
+            if (count % Math.floor(temp) == 0) {
+                i++;
+                all_str += str[i];
+                if (i == str.length - 1) {
+                    all_str += "</" + type + ">";
+                }
+            }
+            if (i < str.length - 1) {
+                requestAnimationFrame(arguments.callee);
+            }
+        });
+        window.scrollTo(99999, 99999);
+    }
+    function cat_Ready() {
+        canvas.onmouseover = function () {
+            drawImg("Cat_wolf.gif");
+            setTimeout(function () {
+                var x = document.getElementById("audio");
+                x.volume = 0.5;
+                x.play();
+            }, 1000);
+        }
+        canvas.onmouseout = function () {
+            drawImg("Cat_index.jpg");
+            document.getElementById("audio").pause();
+            document.getElementById("audio").currentTime = 0.0;
+        }
+        canvas.onclick = function () {
+            stage2();
         }
     }
     function setImg(i, offsetL, offsetT) {
@@ -103,6 +180,93 @@
         print(img.style.left);
         img.style.top = (window.innerHeight - 194) / 2 + offsetT + "px";
         print(img.style.top);
+    }
+    function stage2() {
+        document.getElementById("dj").pause();
+        document.getElementById("mask").style.display = "block";
+        document.getElementsByTagName("body")[0].style.overflowY = "hidden";
+        document.getElementById("main").play();
+        showSentence("heart.png", "我是小心脏哟~哇哈哟~！你是兔兔咩~~~！");
+        setTimeout(function () {
+            showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+            setTimeout(function () {
+                showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                setTimeout(function () {
+                    showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                    setTimeout(function () {
+                        showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                        setTimeout(function () {
+                            showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                            setTimeout(function () {
+                                showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                                setTimeout(function () {
+                                    showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                                    setTimeout(function () {
+                                        showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                                        setTimeout(function () {
+                                            showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                                            setTimeout(function () {
+                                                showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                                                setTimeout(function () {
+                                                    showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                                                    setTimeout(function () {
+                                                        showSentence("onlyyou.png", "只是因为在人群中~多看了你一眼~");
+                                                    }, 7000);
+                                                }, 7000);
+                                            }, 7000);
+                                        }, 7000);
+                                    }, 7000);
+                                }, 7000);
+                            }, 7000);
+                        }, 7000);
+                    }, 7000);
+                }, 7000);
+            }, 7000);
+        }, 7000);
+    }
+    function showSentence(src, str) {
+        var show = document.getElementById("show");
+        var imgShow = document.getElementById("showImg");
+        var sentence = document.getElementById("sentence");
+        console.log(show, imgShow, sentence);
+        imgShow.style.opacity = 0;
+        sentence.style.opacity = 0;
+        show.style.display = "block";
+        imgShow.src = window.resources.get(src).src;
+        imgShow.style.display = "block";
+        var imgI = 0;
+        var sentenceI = 0;
+        var timer1 = setInterval(function () {
+            if (imgI >= 100) {
+                clearInterval(timer1);
+            } else {
+                imgI += 1;
+                imgShow.style.opacity = imgI / 100;
+            }
+        }, 30);
+        var timer2 = setInterval(function () {
+            if (sentenceI >= 100) {
+                clearInterval(timer2);
+            } else {
+                if (imgI >= 100) {
+                    sentence.innerHTML = str;
+                    sentenceI += 1;
+                    sentence.style.opacity = sentenceI / 100;
+                }
+            }
+        }, 30);
+        var sentenceJ = 100;
+        var timer3 = setInterval(function () {
+            if (sentenceJ <= 0) {
+                clearInterval(timer3);
+                sentence.innerHTML = "";
+            } else {
+                if (sentenceI >= 100) {
+                    sentenceJ -= 5;
+                    sentence.style.opacity = sentenceJ / 100;
+                }
+            }
+        }, 30);
     }
 </script>
 </body>
